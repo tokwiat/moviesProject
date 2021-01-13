@@ -7,3 +7,7 @@ services:
       dockerfile: movies/Dockerfile_dev
     ports:
       - "8080:80"
+  movies_tests:
+    build:
+      context: ..
+      dockerfile: movies/Dockerfile_test

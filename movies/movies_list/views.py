@@ -3,7 +3,6 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
-from django.views.decorators.csrf import csrf_protect
 from requests import get
 from movies.settings import APIKEY
 from .models import Favourite
@@ -16,7 +15,6 @@ logging.basicConfig(level=logging.DEBUG,
 ENDPOINTS = {
     'ENDPOINT': f'http://www.omdbapi.com/?apikey={APIKEY}',
 }
-
 @login_required
 def movies_user_panel(request) -> render:
     """
@@ -45,7 +43,7 @@ def movies_user_panel(request) -> render:
 
 @login_required
 @cache_page(60*1)
-def movies(request)->render:
+def movies(request) -> render:
     """
     This view is responsible for generating view after Search query is passed,
     page is changed or Film has been added/removed from Favourites list.
@@ -54,6 +52,7 @@ def movies(request)->render:
     """
     if request.method == "POST":
         return resolve_request(request,  request.POST, page=1)
+
     if request.method == 'GET':
         if 'page' in request.GET and 'film_query' in request.GET and 'store_favourite' not in request.GET:
             return resolve_request(request, request.GET, request.GET['page'])
