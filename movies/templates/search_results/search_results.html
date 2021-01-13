@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<a href="/movies/">Back</a>
+</br>
+</br>
+{{ movies }}
+  <ul class="pagination">
+    {% for i in pages %}
+      <a href="/movies/?page={{ i }}&film_title={{ film_title }}">Page {{ i }}</a>
+    {% endfor %}
+  </ul>
+{% endblock %}
