@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.contrib.auth.decorators import login_required
@@ -36,12 +37,17 @@ def movies(request):
 
 def resolve_request(request, request_type, page=None):
     movies_list = get_movies(request_type['film_title'], page)
-    return render(request, template_name='search_results/search_results.html',
-                  context={'movies': movies_list,
-                           'pages': range(1, int(int(movies_list['totalResults']) / 10) - 1),
-                           'film_title': request_type['film_title'],
-                           'user': request.user})
-
+    if movies_list['Response'] == 'True':
+        return render(request, template_name='search_results/search_results.html',
+                      context={'movies': movies_list,
+                               'pages': range(1, int(int(movies_list['totalResults']) / 10) - 1),
+                               'film_title': request_type['film_title'],
+                               'user': request.user})
+    else:
+        return render(request, template_name='search_results/search_results.html',
+               context={'movies': movies_list,
+                        'film_title': request_type['film_title'],
+                        'user': request.user})
 
 def get_movies(title, page=None):
     """
@@ -50,4 +56,5 @@ def get_movies(title, page=None):
     searched_movies = get(ENDPOINTS['ENDPOINT']+f'&s={title}')
     if page:
         searched_movies = get(ENDPOINTS['ENDPOINT'] + f'&s={title}&page={page}')
+
     return searched_movies.json()
