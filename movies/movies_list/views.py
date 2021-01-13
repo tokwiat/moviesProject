@@ -18,17 +18,20 @@ ENDPOINTS = {
 }
 
 @login_required
-def movies_user_panel(request):
+def movies_user_panel(request) -> render:
     """
-    :param
-    :return
+    This view is responsible for showing User Panel with Favourites List and Search field.
+    :param request
+    :return render View based on given template
     """
     if request.method == "POST":
         return resolve_request(request,  request.POST, page=1)
     if request.method == 'GET':
-        favourite = fetch_favourite_for_user()
+        favourite = fetch_favourites_for_user(request.user)
 
-        if 'page' in request.GET and 'film_query' in request.GET and 'store_favourite' not in request.GET:
+        if 'page' in request.GET \
+                and 'film_query' in request.GET \
+                and 'store_favourite' not in request.GET:
             return resolve_request(request, request.GET, request.GET['page'])
 
         if 'store_favourite' in request.GET:
@@ -42,9 +45,11 @@ def movies_user_panel(request):
 
 @login_required
 @cache_page(60*1)
-def movies(request):
+def movies(request)->render:
     """
-    :param
+    This view is responsible for generating view after Search query is passed,
+    page is changed or Film has been added/removed from Favourites list.
+    :param request
     :return
     """
     if request.method == "POST":
@@ -71,14 +76,20 @@ def resolve_request(request, request_type, page=None, **kwargs):
                                'user': request.user,
                                **kwargs
                                })
-    else:
-        return render(request, template_name='search_results/search_results.html',
-               context={'movies': movies_list,
-                        'film_query': request_type['film_query'],
-                        'user': request.user})
+
+    return render(request, template_name='search_results/search_results.html',
+           context={'movies': movies_list,
+                    'film_query': request_type['film_query'],
+                    'user': request.user})
 
 
 def handle_favourite_update(request):
+    """
+    This is to handle favourite film setting or removing from Favourites List
+    :param request
+    :return: None
+    """
+    # check if row with given user and film already exists
     favourite = Favourite.objects.filter(user_name=request.user,
                                          film_title=request.GET['store_favourite'])
     if favourite:
@@ -94,17 +105,24 @@ def handle_favourite_update(request):
         favourite.save()
 
 
-def fetch_favourite_for_user():
-    favourite = Favourite.objects.filter(is_favourite=True)
+def fetch_favourites_for_user(user):
+    """
+    Fetch all Favourites per user
+    :return: QuerySet, filtered movies
+    """
+    favourite = Favourite.objects.filter(is_favourite=True, user_name=user)
     return favourite
 
 
-def get_movies(title, page=None):
+def get_movies(keyword, page=None):
     """
-    :return
+    Get movies from API endpoint; if page given, query fixed page
+    :param keyword, keyword to search for
+    :param page, page to query
+    :return json obj with matched movies
     """
-    searched_movies = get(ENDPOINTS['ENDPOINT']+f'&s={title}')
+    searched_movies = get(ENDPOINTS['ENDPOINT']+f'&s={keyword}')
     if page:
-        searched_movies = get(ENDPOINTS['ENDPOINT'] + f'&s={title}&page={page}')
+        searched_movies = get(ENDPOINTS['ENDPOINT'] + f'&s={keyword}&page={page}')
 
     return searched_movies.json()

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<a href="/movies/">Back to Search</a>
+<a href="/movies/">Back to User Panel</a>
 </br>
 {% if movies.Response == 'False' %}
     <div align="center">
-      <h1>Results of searching with keyword: {{ film_title }}</h1>
+      <h1>Results of searching with keyword: {{ film_query }}</h1>
       <h1>Result is too ambigius, please use more specific search keyword</h1>
     </div>
 {% else %}
@@ -14,7 +14,7 @@
         {%elif store_favourite and is_favourite == "True" %}
              <h1> Film: "{{ store_favourite }}" has been <font color="green">ADDED</font> from your favourites list!</h1>
         {% endif %}
-          <h1>Results of searching with keyword: {{ film_title }}</h1>
+          <h1>Results of searching with keyword: {{ film_query }}</h1>
           <h1>Total matches: {{ movies.totalResults }}</h1>
     </div>
     <div align="center">

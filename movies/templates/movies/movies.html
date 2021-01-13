@@ -6,10 +6,10 @@
     Hi {{ user.username }}!
     </br>
     {% if favourite %}
-        Your favourite films are:
+        <h1>Your favourite films are:</h1>
         {% for film in favourite %}
             </br>
-            {{ film.film_title }}
+            <b>{{ film.film_title }}</b>
         {% endfor %}
     {% endif %}
   <p><a href="{% url 'logout' %}">Log Out</a></p>
