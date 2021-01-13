@@ -27,7 +27,6 @@ def movies(request):
     """
     if request.method == "POST":
         return resolve_request(request,  request.POST)
-
     if request.method == 'GET':
         if 'page' in request.GET and 'film_title' in request.GET:
             return resolve_request(request, request.GET, request.GET['page'])

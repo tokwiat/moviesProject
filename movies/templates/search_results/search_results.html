@@ -1,12 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
-<a href="/movies/">Back</a>
+<a href="/movies/">Back to Search</a>
 </br>
-</br>
-{{ movies }}
+<div align="center">
+  <h1>Results of searching with keyword: {{ film_title }}</h1>
+  <h1>Total matches: {{ movies.totalResults }}</h1>
+</div>
+<div align="center">
+<ul class="pagination">
+    {% for i in pages %}
+      <a href="/movies/?page={{ i }}&film_title={{ film_title }}">Page {{ i }}</a>
+    {% endfor %}
+  </ul>
+</div>
+<div align="center">
+    <table class="center" border="1">
+      <tr><td colspan="5" align="Center"><h1>Movies List</h1></td></tr>
+        <tr>
+                <td>Title</td>
+                <td>Year</td>
+                <td>imdbID</td>
+                <td>Type</td>
+                <td>Poster</td>
+        </tr>
+        {% for element in movies.Search %}
+            <tr>
+                <td>{{ element.Title }}</td>
+                <td>{{ element.Year }}</td>
+                <td>{{ element.imdbID }}</td>
+                <td>{{ element.Type }}</td>
+                <td><img src="{{ element.Poster }}"></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+<div align="center">
   <ul class="pagination">
     {% for i in pages %}
       <a href="/movies/?page={{ i }}&film_title={{ film_title }}">Page {{ i }}</a>
     {% endfor %}
   </ul>
+</div>
 {% endblock %}
