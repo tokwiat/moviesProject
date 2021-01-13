@@ -3,14 +3,22 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-  Hi {{ user.username }}!
+    Hi {{ user.username }}!
+    </br>
+    {% if favourite %}
+        Your favourite films are:
+        {% for film in favourite %}
+            </br>
+            {{ film.film_title }}
+        {% endfor %}
+    {% endif %}
   <p><a href="{% url 'logout' %}">Log Out</a></p>
   </br>
-  Type movie title to search for:
+  Type keyword to search matching films:
   </br>
   <form action="" method="post">{% csrf_token %}
      </br>
-     <input name="film_title" type="text" placeholder="Search...">
+     <input name="film_query" type="text" placeholder="Search...">
      <input type="submit" value="OK">
   </form>
 {% else %}
