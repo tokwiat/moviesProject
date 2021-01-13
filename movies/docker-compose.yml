@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  movies:
+    build:
+      context: ..
+      dockerfile: movies/Dockerfile_dev
+    ports:
+      - "8080:80"
