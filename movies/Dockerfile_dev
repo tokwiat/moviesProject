@@ -6,5 +6,4 @@ COPY /movies/requirements/dev.txt /code/requirements/
 RUN pip install -r requirements/dev.txt
 COPY /movies/ /code/
 EXPOSE 80
-CMD ["python", "manage.py", "migrate"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
